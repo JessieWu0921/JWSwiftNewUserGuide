@@ -71,7 +71,8 @@ class JWGuideView: UIView {
         
         self.baseFrame = guideInfo.focusView!.frame
         self.baseFrame.origin.y += guideInfo.customizeNavBar ? UIApplication.shared.statusBarFrame.height : 0.0
-        self.findBaseFrame(view: guideInfo.focusView)
+//        self.findBaseFrame(view: guideInfo.focusView)
+        fetchBaseFrame(view: guideInfo.focusView, frame: &self.baseFrame)//利用指针 inout关键字 也可以利用unsafepointer<T>
         self.drawVisualPath(guideInfo: guideInfo)
         self.updateGuideImageLocation(guideInfo: guideInfo)
     }
@@ -85,6 +86,18 @@ class JWGuideView: UIView {
             baseFrame.origin.x += frame.minX
             baseFrame.origin.y += frame.minY
             self.findBaseFrame(view: view!.superview)
+        } else {
+            return
+        }
+    }
+    //fetch focus view base frame
+    private func fetchBaseFrame(view: UIView?, frame: inout CGRect) { //指针
+        let superView: UIView? = view?.superview
+        if superView != nil && superView?.superview != nil && !(superView?.superview is UIWindow) {
+            let superFrame = superView!.frame
+            frame.origin.x += superFrame.minX
+            frame.origin.y += superFrame.minY
+            fetchBaseFrame(view: view!.superview, frame: &frame)
         } else {
             return
         }

@@ -71,8 +71,12 @@ class JWGuideView: UIView {
         
         self.baseFrame = guideInfo.focusView!.frame
         self.baseFrame.origin.y += guideInfo.customizeNavBar ? UIApplication.shared.statusBarFrame.height : 0.0
-//        self.findBaseFrame(view: guideInfo.focusView)
-        fetchBaseFrame(view: guideInfo.focusView, frame: &self.baseFrame)//利用指针 inout关键字 也可以利用unsafepointer<T>
+        self.findBaseFrame(view: guideInfo.focusView)
+        /******  利用指针 inout关键字 也可以利用unsafepointer<T>，但这个在初始化的时候 要注意内存是需要自己手动来做的
+                （但并不推荐用指针，毕竟swift已经告诉你了unsafe的，Swift尽量隐藏和弱化指针的做法已经很明显暗示尽量不要用指针了
+        ******/
+//        fetchBaseFrame(view: guideInfo.focusView, frame: &self.baseFrame)
+        
         self.drawVisualPath(guideInfo: guideInfo)
         self.updateGuideImageLocation(guideInfo: guideInfo)
     }
